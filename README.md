@@ -9,7 +9,7 @@ crop png images
 ## Usage
 
 ```javascript
-var Cropng = require("croppng");
+var Cropng = require("cropng");
 
 var png = new Cropng("/path/to/image");
 // or with a buffer

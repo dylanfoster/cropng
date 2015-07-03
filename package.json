@@ -1,11 +1,11 @@
 {
-  "name": "pngcrop",
+  "name": "cropng",
   "version": "0.1.0",
   "description": "png cropping tool",
-  "homepage": "https://github.com/dylanfoster/pngcrop",
+  "homepage": "https://github.com/dylanfoster/cropng",
   "repository": {
     "type": "git",
-    "url": "git@github.com:dylanfoster/pngcrop.git"
+    "url": "git@github.com:dylanfoster/cropng.git"
   },
   "author": {
     "name": "Dylan Foster",
