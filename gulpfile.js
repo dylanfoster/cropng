@@ -5,6 +5,7 @@ require("babel/register");
 var path = require("path");
 
 var babel = require("gulp-babel");
+var esdoc = require("esdoc");
 var eslint = require("gulp-eslint");
 var gulp = require("gulp");
 var isparta = require("isparta");
@@ -34,6 +35,12 @@ gulp.task("cover", function () {
       instrumenter: isparta.Instrumenter,
       includeUntested: true
     }));
+});
+
+gulp.task("docs", function () {
+  var config = require("./esdoc.json");
+  var publisher = require("esdoc/out/src/Publisher/publish");
+  esdoc.generate(config, publisher);
 });
 
 gulp.task("lint", function () {

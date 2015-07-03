@@ -10,6 +10,10 @@ import { PNG } from "node-png";
 import readChunk from "read-chunk";
 
 class Cropng {
+  /**
+   * @constructor
+   * @param {Object|String} image the image to crop
+   */
   constructor(image) {
     Assert(image, "Missing required image");
     Assert(Buffer.isBuffer(image) || typeof image === "string", "Image must be a string or buffer");
@@ -25,18 +29,22 @@ class Cropng {
 
     Assert(mime === "image/png", `Invalid MIME type: ${mime}`);
 
+    /**
+     * our image
+     * @type {Buffer|String}
+     */
     this.image = image;
   }
 
   /**
    * crop
    *
-   * @param { x: x
-   * @param y: y
-   * @param height: height
-   * @param width: width }
-   * @param callback
-   * @return {undefined}
+   * @param {Object} measurements the x,y,height and width to crop
+   * @param {Number} measurements.x the x coordinate to start from
+   * @param {Number} measurements.y the y coordinate to start from
+   * @param {Number} measurements.height the height of the crop
+   * @param {Number} measurements.width the width of the crop
+   * @param {function(err: Object, image: Object)} callback
    */
   crop({ x: x, y: y, height: height, width: width }, callback) {
     let png = new PNG();
@@ -45,7 +53,10 @@ class Cropng {
     png.parse(parsable, (err, parsed) => {
       if (err) { return callback(err); }
 
-      this.bitmap = {
+      /**
+       * @type {Object}
+       */
+      this._bitmap = {
         data: new Buffer(parsed.data),
         height: parsed.height,
         width: parsed.width
@@ -56,11 +67,11 @@ class Cropng {
       height = Math.round(height);
       width = Math.round(width);
 
-      let bitmap = new Buffer(this.bitmap.data.length);
+      let bitmap = new Buffer(this._bitmap.data.length);
       let offset = 0;
 
       this.scan(x, y, height, width, function (x, y, idx) {
-        let data = this.bitmap.data.readUInt32BE(idx, true);
+        let data = this._bitmap.data.readUInt32BE(idx, true);
         bitmap.writeUInt32BE(data, offset, true);
         offset += 4;
       });
@@ -73,6 +84,10 @@ class Cropng {
     });
   }
 
+  /**
+   * _bufferizeImage turn an image into a buffer
+   * @return {Object} bufferized image
+   */
   _bufferizeImage() {
     if (!Buffer.isBuffer(this.image)) {
       return fs.readFileSync(this.image);
@@ -80,17 +95,64 @@ class Cropng {
     return this.image;
   }
 
+  /**
+   * _getMimeFromPath find the MIME type of a file
+   *
+   * @param {String} filePath the path to a file
+   * @return {String} the MIME type => "image/png"
+   */
   _getMimeFromPath(filePath) {
     let buffer = readChunk.sync(filePath, 0, 262);
     if (fileType(buffer)) { return fileType(buffer).mime; }
     return null;
   }
 
+  /**
+   * _getMimeFromBuffer find the MIME type of a buffer
+   *
+   * @param {Object} buffer an image buffer
+   * @return {String} the MIME type => "image/png"
+   */
   _getMimeFromBuffer(buffer) {
     if (fileType(buffer)) { return fileType(buffer).mime; }
     return null;
   }
 
+  /*
+
+     image pixel scanning
+     https://github.com/oliver-moran/jimp
+
+     Copyright (c) 2014 Oliver Moran
+
+     Permission is hereby granted, free of charge, to any person obtaining a copy
+     of this software and associated documentation files (the "Software"), to deal
+     in the Software without restriction, including without limitation the rights
+     to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+     copies of the Software, and to permit persons to whom the Software is
+     furnished to do so, subject to the following conditions:
+
+     The above copyright notice and this permission notice shall be included in all
+     copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+     IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+     FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+     AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+     SOFTWARE.
+  */
+
+  /**
+   * scan scans a region of a bitmap and calls iter for each region
+   *
+   * @param {Number} x the x coordinate to start from
+   * @param {Number} y the y coordinate to start from
+   * @param {Number} h the height of the scan region
+   * @param {Number} w the width of the scan region
+   * @param {function(x: Number, y: Number, idx: Number)} iter a function to call on each region.
+   */
   scan(x, y, h, w, iter) {
     [x, y, h, w].forEach(m => {
       m = Math.round(m);
@@ -98,7 +160,7 @@ class Cropng {
 
     for (let _y = y; _y < (y + h); _y++) {
       for (let _x = x; _x < (x + w); _x++) {
-        let idx = (this.bitmap.width * _y + _x) << 2;
+        let idx = (this._bitmap.width * _y + _x) << 2;
         iter.call(this, _x, _y, idx);
       }
     }
