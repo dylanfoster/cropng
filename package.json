@@ -40,6 +40,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "node-png": "^0.4.3"
+    "exists-sync": "0.0.3",
+    "file-type": "^2.7.0",
+    "node-png": "^0.4.3",
+    "read-chunk": "^1.0.1"
   }
 }
