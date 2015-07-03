@@ -1,12 +1,26 @@
-# croppng
+# cropng
 
 crop png images
 
 ## Installation
 
-`npm i --save croppng`
+`npm i --save cropng`
 
 ## Usage
+
+```javascript
+var cropng = require("croppng");
+
+cropng("/path/to/image", { x: x, y: y, height; height, width: width }, function (err, image) {
+/*
+ * {
+ *   height: <number>,
+ *   width: <number>,
+ *   data: buffer
+ * }
+ */
+});
+```
 
 ## License
 
