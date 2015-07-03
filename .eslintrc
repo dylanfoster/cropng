@@ -1,2 +1,4 @@
 ---
   extends: unstandard
+  rules:
+    no-extra-parens: 0

@@ -71,7 +71,7 @@ class Cropng {
       let bitmap = new Buffer(this._bitmap.data.length);
       let offset = 0;
 
-      this.scan(x, y, height, width, function (x, y, idx) {
+      this.scan(x, y, height, width, function (_x, _y, idx) {
         let data = this._bitmap.data.readUInt32BE(idx, true);
         bitmap.writeUInt32BE(data, offset, true);
         offset += 4;
@@ -136,7 +136,7 @@ class Cropng {
     png.width = image.width;
 
     toBuff(png.pack(), function (err, buffer) {
-      if (err) { return callback (err); }
+      if (err) { return callback(err); }
       callback(null, {
         data: buffer,
         height: image.height,
