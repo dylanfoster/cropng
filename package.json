@@ -5,7 +5,7 @@
   "homepage": "https://github.com/dylanfoster/pngcrop",
   "repository": {
     "type": "git",
-    "url":  "git@github.com:dylanfoster/pngcrop.git"
+    "url": "git@github.com:dylanfoster/pngcrop.git"
   },
   "author": {
     "name": "Dylan Foster",
@@ -39,5 +39,6 @@
   },
   "license": "MIT",
   "dependencies": {
+    "node-png": "^0.4.3"
   }
 }

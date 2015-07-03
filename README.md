@@ -9,21 +9,14 @@ crop png images
 ## Usage
 
 ```javascript
-var cropng = require("croppng");
+var Cropng = require("croppng");
 
-cropng("/path/to/image", { x: x, y: y, height; height, width: width }, function (err, image) {
-/*
- * {
- *   height: <number>,
- *   width: <number>,
- *   data: buffer
- * }
- */
-});
+var png = new Cropng("/path/to/image");
+// or with a buffer
+var png = new Cropng(buffer);
 
-// or a buffer
 
-cropng(imageBuffer, { x: x, y: y, height: height, width: width }, function (err, image) {
+png.crop({ x: x, y: y, height; height, width: width }, function (err, image) {
 /*
  * {
  *   height: <number>,
