@@ -8,6 +8,7 @@ import existsSync from "exists-sync";
 import fileType from "file-type";
 import { PNG } from "node-png";
 import readChunk from "read-chunk";
+import toBuff from "stream-to-buffer";
 
 class Cropng {
   /**
@@ -77,10 +78,11 @@ class Cropng {
       });
 
       let image = {};
+
       image.data = new Buffer(bitmap);
       image.height = height;
       image.width = width;
-      callback(null, image);
+      this._pack(image, callback);
     });
   }
 
@@ -116,6 +118,31 @@ class Cropng {
   _getMimeFromBuffer(buffer) {
     if (fileType(buffer)) { return fileType(buffer).mime; }
     return null;
+  }
+
+  /**
+   * _pack packs the image to return the buffer to it's original format
+   *
+   * @param {Object} image the image to pack
+   * @param {Number} image.height the height
+   * @param {Number} image.width the width
+   * @param {Object} image.data the image buffer
+   * @param {function(err: Object, image: Object)} callback
+   */
+  _pack(image, callback) {
+    let png = new PNG();
+    png.data = new Buffer(image.data);
+    png.height = image.height;
+    png.width = image.width;
+
+    toBuff(png.pack(), function (err, buffer) {
+      if (err) { return callback (err); }
+      callback(null, {
+        data: buffer,
+        height: image.height,
+        width: image.width
+      });
+    });
   }
 
   /*

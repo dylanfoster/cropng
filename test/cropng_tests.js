@@ -54,6 +54,8 @@ describe("Croppng", function () {
         expect(err).to.eql(null);
         expect(cropped.height).to.eql(50);
         expect(cropped.width).to.eql(50);
+        let fileType = require("file-type");
+        expect(fileType(cropped.data).mime).to.eql("image/png");
         done();
       });
     });
