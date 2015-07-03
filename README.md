@@ -20,6 +20,18 @@ cropng("/path/to/image", { x: x, y: y, height; height, width: width }, function 
  * }
  */
 });
+
+// or a buffer
+
+cropng(imageBuffer, { x: x, y: y, height: height, width: width }, function (err, image) {
+/*
+ * {
+ *   height: <number>,
+ *   width: <number>,
+ *   data: buffer
+ * }
+ */
+});
 ```
 
 ## License
