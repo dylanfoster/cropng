@@ -59,5 +59,19 @@ describe("Croppng", function () {
         done();
       });
     });
+
+    it("crops an image from a buffer", function (done) {
+      let image = fs.readFileSync(path.resolve(__dirname, "fixtures/mario.png"));
+
+      let png = new PNG(image);
+      png.crop({ x: 0, y: 0, height: 50, width: 50 }, function (err, cropped) {
+        expect(err).to.eql(null);
+        expect(cropped.height).to.eql(50);
+        expect(cropped.width).to.eql(50);
+        let fileType = require("file-type");
+        expect(fileType(cropped.data).mime).to.eql("image/png");
+        done();
+      });
+    });
   });
 });
