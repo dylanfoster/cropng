@@ -2,11 +2,11 @@
 
 import { expect } from "chai";
 
-import PngCrop = from "../src/croppng";
+import PNG from "../src/cropng";
 
 describe("croppng", function () {
   it("exists", function (done) {
-    expect(!PngCrop).to.equal(false);
+    expect(!PNG).to.equal(false);
     done();
   });
 });
