@@ -1,2 +1,2 @@
 "use strict";
-module.exports = require("./dist/croppng");
+module.exports = require("./dist/cropng");
